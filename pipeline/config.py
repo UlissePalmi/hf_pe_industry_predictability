@@ -13,10 +13,6 @@ OUTPUT_DIR = DATA_DIR / "output"
 for d in [RAW_DIR, PROCESSED_DIR, OUTPUT_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
-# CRSP filters
-VALID_SHRCDS = {10, 11}  # Common shares only
-VALID_EXCHCDS = {1, 2, 3, 31, 32, 33}  # NYSE, AMEX, NASDAQ and satellites
-
 # CCM linking
 VALID_LINKTYPES = {"LU", "LC"}  # LU = unresearched, LC = researched
 VALID_LINKPRIMS = {"P", "C"}    # P = primary, C = calendar primary

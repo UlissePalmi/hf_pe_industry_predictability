@@ -79,22 +79,25 @@ class CRSPExtractor:
         sql = f"""
         SELECT
             a.permno,
-            a.date,
-            ABS(a.prc) AS prc,
+            a.dlycaldt AS date,
+            ABS(a.dlyprc) AS prc,
             a.shrout,
-            a.ret,
-            a.retx,
-            a.vol
-        FROM {config.CRSP_DAILY_TABLE} AS a
-        INNER JOIN {config.CRSP_NAMES_TABLE} AS b
+            a.dlyret AS ret,
+            a.dlyretx AS retx,
+            a.dlyvol AS vol
+        FROM crsp.dsf_v2 AS a
+        INNER JOIN crsp.stksecurityinfohist AS b
             ON a.permno = b.permno
-            AND a.date BETWEEN b.namedt AND b.nameendt
-        WHERE b.shrcd IN ({','.join(map(str, config.VALID_SHRCDS))})
-          AND b.exchcd IN ({','.join(map(str, config.VALID_EXCHCDS))})
-          AND a.date BETWEEN '{year}-01-01' AND '{year}-12-31'
-          AND a.prc IS NOT NULL
-          AND a.shrout IS NOT NULL
-        ORDER BY a.permno, a.date
+            AND a.dlycaldt BETWEEN b.secinfostartdt AND b.secinfoenddt
+        WHERE b.sharetype IN ('NS', 'N/A')
+        AND b.securitytype = 'EQTY'
+        AND b.securitysubtype = 'COM'
+        AND b.usincflg = 'Y'
+        AND b.issuertype IN ('ACOR', 'CORP')
+        AND a.dlycaldt BETWEEN '{year}-01-01' AND '{year}-12-31'
+        AND a.dlyprc IS NOT NULL
+        AND a.shrout IS NOT NULL
+        ORDER BY a.permno, a.dlycaldt
         """
 
         try:
