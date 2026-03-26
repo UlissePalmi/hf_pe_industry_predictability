@@ -42,8 +42,9 @@ def run() -> None:
     def compute_weekly_return(daily_rets):
         """Compute weekly return from daily returns, excluding invalid codes."""
         # CRSP missing return codes
-        invalid_codes = {-99, -77, -88, -66}
-        valid_rets = daily_rets[~daily_rets.isin(invalid_codes)].dropna()
+        invalid_codes = [-99, -77, -88, -66]
+        valid_rets = daily_rets[~np.isin(daily_rets, invalid_codes)]
+        valid_rets = valid_rets[~np.isnan(valid_rets)]
 
         if len(valid_rets) == 0:
             return np.nan

@@ -24,9 +24,7 @@ def run() -> None:
     # linkenddt can be NaT (still-active links) — treat as today or beyond
     today = pd.Timestamp(datetime.now())
 
-    merged = crsp_daily.merge(
-        ccm_links, on="permno", how="left"
-    )
+    merged = crsp_daily.merge(ccm_links, on="permno", how="left")
 
     # Filter to rows where the date falls within the link validity window
     # date >= linkdt AND date <= linkenddt (or today if linkenddt is NaT)
